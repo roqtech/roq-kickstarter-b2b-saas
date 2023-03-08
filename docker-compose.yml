@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  roqstarterdb:
+    image: postgres:14.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: roqdevb2b
+      POSTGRES_PASSWORD: roqdevb2b
+      POSTGRES_DB: roqdevb2b
+      PGUSER: roqdevb2b
+      PGDATABASE: roqdevb2b
+    ports:
+      - "5437:5432"

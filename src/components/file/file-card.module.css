@@ -1,0 +1,60 @@
+.card {
+    width: 300px;
+    padding: 10px!important;
+    height: 400px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;    
+}
+
+.imgContainer {
+    margin-bottom: 10px;
+    border-radius: 16px;
+    width: 280px;
+    background-color: rgba(var(--light-grey-rgb),.3);
+    overflow: hidden;
+}
+
+.img {
+    object-fit: cover;
+    width: 280px;
+    height: 250px;
+    
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    padding: 10px;
+}
+
+.avatar {
+    background-color: rgb(var(--light-grey-rgb));
+    color: #FFFFFF;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 40px;
+}
+
+.filename {
+    height: 30px;
+    padding: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.timestamp {
+    font-size: 12px;
+    display: block;
+    color: rgb(var(--light-grey-rgb));
+}

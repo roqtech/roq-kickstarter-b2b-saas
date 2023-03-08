@@ -1,0 +1,26 @@
+.feed {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    margin-bottom: 30px;
+}
+
+.uploadContainer {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+.listContainer {
+    width: 100%;
+    margin-top: 20px;
+    justify-content: center;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
