@@ -1,15 +1,7 @@
-import {signOut, useSession} from "@roq/nextjs";
-import {
-    Bars3Icon,
-    CalendarIcon,
-    ChartBarIcon, Cog6ToothIcon,
-    FolderIcon,
-    HomeIcon,
-    InboxIcon,
-    UsersIcon,
-    XMarkIcon,
-} from '@heroicons/react/24/outline'
+import {signOut, UserAccountDropdown, useSession} from "@roq/nextjs";
+import {HomeIcon, UsersIcon,} from '@heroicons/react/24/outline'
 import Link from "next/link";
+import {NotificationBell} from '@roq/ui-react';
 
 interface AppLayoutProps {
     children: React.ReactNode;
@@ -20,6 +12,7 @@ const navigation = [
     {name: 'Dashboard', href: '/dashboard', icon: HomeIcon, page: "dashboard"},
     {name: 'Users', href: '/users', icon: UsersIcon, page: "users"},
     {name: 'User Invite', href: '/userinvite', icon: UsersIcon, page: "userinvite"},
+    {name: 'File uploads', href: '/files', icon: UsersIcon, page: "files"},
 ]
 
 export default function DashboardLayout({children, current}: AppLayoutProps) {
@@ -30,27 +23,55 @@ export default function DashboardLayout({children, current}: AppLayoutProps) {
     return (
         <>
             {/*Navbar*/}
-            <div className="navbar bg-neutral mb-10">
-                <a className="btn btn-ghost normal-case text-xl text-white">Hi {firstName}</a>
+            <div className="navbar bg-base-100 bg-gray-200">
+                <div className="flex-none">
+                    <button className="btn btn-square btn-ghost">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             className="inline-block w-5 h-5 stroke-current">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                  d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div className="flex-1">
+                    <a className="btn btn-ghost normal-case text-xl text-blue-600">B2B Kickstarter</a>
+                </div>
+                <div className="flex-none">
+                    {/*<button className="btn btn-square btn-ghost">*/}
+                    {/*    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>*/}
+                    {/*</button>*/}
+                    <NotificationBell className=" bg-gray-200"/>
+                    <UserAccountDropdown/>
+                    <div className="text-xs ml-2">
+                        <div className="block">
+                            {session.user.firstName} {session.user.lastName}
+                        </div>
+                        <div className="">
+                            {session.user.roles}
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
 
             {/*Sidebar*/}
             <div className="flex">
                 <ul className="menu bg-base-100 w-56 p-2 rounded-box">
-                {navigation.map((item) => (
-                    <li>
-                        <Link href={item.href} className={(item.page == current)?"active":""}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                            </svg>
-                            {item.name}
-                        </Link>
-                    </li>
+                    {navigation.map((item) => (
+                        <li key={item.page}>
+                            <Link href={item.href} className={(item.page == current) ? "active" : ""}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                </svg>
+                                {item.name}
+                            </Link>
+                        </li>
 
-                ))}
+                    ))}
                     <li>
                         <a onClick={signOut}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -63,8 +84,8 @@ export default function DashboardLayout({children, current}: AppLayoutProps) {
                     </li>
 
                 </ul>
-                <div className="min-h-screen pl-12">
-                {children}
+                <div className="min-h-screen p-6 bg-gray-100 w-screen">
+                    {children}
                 </div>
             </div>
             <footer className="footer p-10 bg-neutral text-neutral-content">

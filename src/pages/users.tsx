@@ -1,20 +1,18 @@
-import {requireNextAuth, UserInvitesTable, useSession} from "@roq/nextjs";
-import {ErrorMessage, Field, Form, Formik} from "formik";
+import {requireNextAuth, useSession} from "@roq/nextjs";
 import {useEffect, useState} from "react";
 import DashboardLayout from "../layout/dashboard.layout";
 
-function DashboardPage() {
+function UsersPage() {
 
     const [userProfiles, setUserProfiles] = useState([]);
 
     useEffect(() => {
-        async function fetchMenus() {
+        async function fetchUsers() {
             const res = await fetch('/api/users');
             const json = await res.json();
             setUserProfiles(json.result.users.userProfiles.data);
         }
-
-        fetchMenus();
+        fetchUsers();
     }, []);
 
     const {session, status} = useSession();
@@ -34,7 +32,7 @@ function DashboardPage() {
                     </thead>
                     <tbody>
                     {userProfiles.map((user, index) => (
-                        <tr>
+                        <tr key={user.id}>
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{user.tenantId}</td>
                         </tr>
@@ -46,8 +44,8 @@ function DashboardPage() {
     );
 }
 
-// export default DashboardPage;
+// export default UsersPage;
 export default requireNextAuth({
     redirectIfAuthenticated: false,
     redirectTo: "/login",
-})(DashboardPage);
+})(UsersPage);

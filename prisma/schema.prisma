@@ -10,17 +10,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Menu {
-  id        Int        @id @default(autoincrement())
+model Car {
+  id        Int     @id @default(autoincrement())
   name      String
-  MenuItem  MenuItem[]
+  price     Int
+  rented    Boolean
   roqUserId String
-}
-
-model MenuItem {
-  id     Int    @id @default(autoincrement())
-  name   String
-  price  Int
-  menu   Menu   @relation(fields: [menuId], references: [id])
-  menuId Int
 }

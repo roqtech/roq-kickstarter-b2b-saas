@@ -9,13 +9,25 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const session = getServerSession(req);
 
-    if (req.method === 'GET') {
+    switch (req.method) {
+        case 'GET':
+            return getUsers();
+        // case 'POST':
+        //     return createCar();
+        // case 'UPDATE':
+        //     return createCar();
+        // case'DELETE':
+        //     return deleteCar();
+        default:
+            return res.status(405).json({message: 'Method ' + req.method + ' not allowed'})
+    }
+
+    async function getUsers() {
         const users = await roqClient.asUser(session.roqUserId).userProfiles();
 
         res.status(200).json({result: {users}});
-    } else {
-        res.status(400).json({message: 'Invalid method'});
     }
+
 }
 
 // export default handler;
