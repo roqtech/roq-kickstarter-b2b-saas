@@ -6,6 +6,7 @@ import { hasAccess } from 'library/authorization/hasAccess';
 import { ResourceOperationEnum } from "@roq/nodejs/dist/src/generated/sdk";
 import { prisma } from 'server/db';
 import { retrieveWithAuthorization } from 'library/authorization/retrieve-with-authorization';
+import { AuthorizationForbiddenException } from 'library/authorization/authorization-forbidden.exception';
 
 
 const entity = 'Workspace'
@@ -42,7 +43,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         try {
             const { allowed } = await hasAccess(roqUserId, entity, ResourceOperationEnum.Create)
             if(!allowed) {
-              throw new Error('Forbidden')
+                return res.status(403).json({message: 'Forbidden' })
             }
             const data = await prisma.workspace.create({
                 data: req.body
@@ -71,7 +72,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             const data = await prisma.workspace.delete({where: { id: id as string }});
             return res.status(200).json({success: true, data });
         } catch (error) {
-            if(error.toString() === 'Forbidden') {
+            if(error instanceof AuthorizationForbiddenException) {
                 return res.status(403).json({message: 'Forbidden' })
             }
             return res.status(500).json({message: 'Server error'});

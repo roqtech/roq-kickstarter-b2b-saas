@@ -6,6 +6,7 @@ import { hasAccess } from 'library/authorization/hasAccess';
 import { ResourceOperationEnum } from "@roq/nodejs/dist/src/generated/sdk";
 import { retrieveWithAuthorization } from 'library/authorization/retrieve-with-authorization';
 import { buildAuthorizationFilter } from 'library/authorization/build-filter';
+import { AuthorizationForbiddenException } from 'library/authorization/authorization-forbidden.exception';
 
 const entity = 'Project'
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -74,10 +75,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
             return res.status(200).json({ success: true, data });
         } catch (error) {
-            if(error.toString() === 'Forbidden') {
+            if(error instanceof AuthorizationForbiddenException) {
                 return res.status(403).json({message: 'Forbidden' })
             }
-            console.log('error: ', error);
             return res.status(500).json({message: 'Server error'});
         }
     }

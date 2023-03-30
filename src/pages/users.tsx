@@ -1,19 +1,14 @@
 import {requireNextAuth, useSession} from "@roq/nextjs";
-import {useEffect, useState} from "react";
 import DashboardLayout from "../layout/dashboard.layout";
+import useSWR from "swr";
+import { fetcher } from "library/fetcher";
 
 function UsersPage() {
 
-    const [userProfiles, setUserProfiles] = useState([]);
-
-    useEffect(() => {
-        async function fetchUsers() {
-            const res = await fetch('/api/users');
-            const { users } = await res.json();
-            setUserProfiles(users.data);
-        }
-        fetchUsers();
-    }, []);
+    const { data } = useSWR<{ users: { data: any[] } }>(
+        '/api/users',
+        fetcher
+      );
 
     const {session, status} = useSession();
 
@@ -31,7 +26,7 @@ function UsersPage() {
                     </tr>
                     </thead>
                     <tbody>
-                    {userProfiles.map((user, index) => (
+                    {data?.users.data?.map((user, index) => (
                         <tr key={user.id}>
                             <td>{user.firstName} {user.lastName}</td>
                             <td>{user.tenantId}</td>

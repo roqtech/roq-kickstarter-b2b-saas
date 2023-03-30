@@ -1,4 +1,5 @@
 import { ResourceOperationEnum } from "@roq/nodejs/dist/src/generated/sdk"
+import { AuthorizationForbiddenException } from "./authorization-forbidden.exception"
 import { buildAuthorizationFilter } from "./build-filter"
 import { hasAccess } from "./hasAccess"
 
@@ -14,7 +15,7 @@ export async function retrieveWithAuthorization(params: RetrieveWithAuthorizatio
   const { roqUserId, entity, operation, prismaCollection, id } = params
   const { allowed, queryPlans } = await hasAccess(roqUserId, entity, operation)
   if(!allowed) {
-    throw new Error('Forbidden')
+    throw new AuthorizationForbiddenException('Forbidden')
   }
   const filter = await buildAuthorizationFilter(roqUserId, entity, { id }, queryPlans)
   return prismaCollection.findFirst({

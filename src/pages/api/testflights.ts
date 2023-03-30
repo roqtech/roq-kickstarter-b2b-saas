@@ -5,6 +5,7 @@ import { hasAccess } from 'library/authorization/hasAccess';
 import { ResourceOperationEnum } from "@roq/nodejs/dist/src/generated/sdk";
 import { prisma } from 'server/db';
 import { retrieveWithAuthorization } from 'library/authorization/retrieve-with-authorization';
+import { AuthorizationForbiddenException } from 'library/authorization/authorization-forbidden.exception';
 
 const entity = 'TestFlight'
 
@@ -69,7 +70,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
             return res.status(200).json({success: true, data });
         } catch (error) {
-            if(error.toString() === 'Forbidden') {
+            if(error instanceof AuthorizationForbiddenException) {
                 return res.status(403).json({message: 'Forbidden' })
             }
             console.error(error);
