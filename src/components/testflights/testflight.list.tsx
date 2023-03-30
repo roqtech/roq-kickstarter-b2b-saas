@@ -7,36 +7,18 @@ interface TestFlight {
     roqUserId: number;
 }
 
-interface UserProfile {
-    id: number;
-    firstName: string;
-    lastName: string;
-}
-
 interface TestFlightListProps {
-    handleTouch: () => void;
-    touch: number;
+    refetch: () => void;
+    data: TestFlight[]
 }
 
-function TestFlightList({handleTouch, touch}: TestFlightListProps): JSX.Element {
-    const [data, setData] = useState<TestFlight[]>([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch('/api/testflights');
-            const response = await res.json();
-            setData(response.data);
-        }
-
-        fetchData();
-    }, [touch]);
-
+function TestFlightList({refetch, data }: TestFlightListProps): JSX.Element {
     const handleDeleteitem = async (id: number) => {
         try {
             const response = await fetch('/api/testflights?id='+id, {
                 method: 'DELETE',
             });
-            handleTouch();
+            refetch();
         } catch (error) {
             console.error(error);
         }

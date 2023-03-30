@@ -60,7 +60,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         try {
             await retrieveWithAuthorization({
-                prismaCollection: prisma.testFlight,
+                prismaCollection: prisma.project,
                 entity,
                 id,
                 roqUserId,
@@ -77,6 +77,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             if(error.toString() === 'Forbidden') {
                 return res.status(403).json({message: 'Forbidden' })
             }
+            console.log('error: ', error);
             return res.status(500).json({message: 'Server error'});
         }
     }

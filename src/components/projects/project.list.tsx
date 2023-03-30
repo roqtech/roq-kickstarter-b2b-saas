@@ -1,42 +1,26 @@
 import {useEffect, useState} from "react";
 import {TrashIcon} from "@heroicons/react/24/outline";
 
-interface Project {
+export interface Project {
     id: number;
     name: string;
     roqUserId: number;
 }
 
-interface UserProfile {
-    id: number;
-    firstName: string;
-    lastName: string;
-}
 
 interface ProjectListProps {
-    handleTouch: () => void;
-    touch: number;
+    refetch(): void
+    data: Project[]
+    isLoading?: boolean
 }
 
-function ProjectList({handleTouch, touch}: ProjectListProps): JSX.Element {
-    const [data, setData] = useState<Project[]>([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch('/api/projects');
-            const response = await res.json();
-            setData(response.data);
-        }
-
-        fetchData();
-    }, [touch]);
-
+function ProjectList({ data, refetch }: ProjectListProps): JSX.Element {
     const handleDeleteitem = async (id: number) => {
         try {
             const response = await fetch('/api/projects?id='+id, {
                 method: 'DELETE',
             });
-            handleTouch();
+            refetch()
         } catch (error) {
             console.error(error);
         }

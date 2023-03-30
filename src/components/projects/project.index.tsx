@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import ProjectList from './project.list';
 import ProjectForm from './project.form';
+import useSWR, { Fetcher } from "swr";
+import { fetcher } from 'library/fetcher';
 
 const ProjectIndex = (): JSX.Element => {
-    const [touch, setTouch] = useState<number>(0);
-
-    const handleTouch = () => {
-        setTouch((touch) => touch + 1);
-    };
+    const { data, mutate } = useSWR(
+        '/api/projects',
+        fetcher
+      );
 
     return (
         <div>
-            <ProjectForm handleTouch={handleTouch} />
-            <ProjectList handleTouch={handleTouch} touch={touch} />
+            <ProjectForm refetch={() => mutate()} />
+            <ProjectList refetch={() => mutate()} data={data?.data ?? []} />
         </div>
     );
 };

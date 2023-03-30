@@ -1,7 +1,6 @@
-import {useEffect, useState} from "react";
 import {TrashIcon} from "@heroicons/react/24/outline";
 
-interface Workspace {
+export interface Workspace {
     id: number;
     name: string;
     roqUserId: number;
@@ -9,29 +8,17 @@ interface Workspace {
 
 
 interface WorkspaceListProps {
-    handleTouch: () => void;
-    touch: number;
+    refetch: () => void;
+    data: Workspace[]
 }
 
-function WorkspaceList({handleTouch, touch}: WorkspaceListProps): JSX.Element {
-    const [data, setData] = useState<Workspace[]>([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch('/api/workspaces');
-            const response = await res.json();
-            setData(response.data);
-        }
-
-        fetchData();
-    }, [touch]);
-
+function WorkspaceList({refetch, data}: WorkspaceListProps): JSX.Element {
     const handleDeleteitem = async (id: number) => {
         try {
             const response = await fetch('/api/workspaces?id='+id, {
                 method: 'DELETE',
             });
-            handleTouch();
+            refetch();
         } catch (error) {
             console.error(error);
         }

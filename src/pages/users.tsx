@@ -9,8 +9,8 @@ function UsersPage() {
     useEffect(() => {
         async function fetchUsers() {
             const res = await fetch('/api/users');
-            const json = await res.json();
-            setUserProfiles(json.result.users.userProfiles.data);
+            const { users } = await res.json();
+            setUserProfiles(users.data);
         }
         fetchUsers();
     }, []);

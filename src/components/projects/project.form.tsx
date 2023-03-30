@@ -2,10 +2,10 @@ import { entitySchema } from 'components/validation/entity.schema';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
 
 interface ProjectFormProps {
-    handleTouch: () => void;
+    refetch: () => void;
 }
 
-const ProjectForm = ({handleTouch}: ProjectFormProps): JSX.Element => {
+const ProjectForm = ({refetch}: ProjectFormProps): JSX.Element => {
     const save = async (values: any, {resetForm}: any) => {
         try {
             const response = await fetch('/api/projects', {
@@ -13,8 +13,8 @@ const ProjectForm = ({handleTouch}: ProjectFormProps): JSX.Element => {
                 headers: {'Content-Type': 'application/json',},
                 body: JSON.stringify(values),
             });
-            handleTouch();
             resetForm();
+            refetch();
         } catch (error) {
             console.error(error);
         }

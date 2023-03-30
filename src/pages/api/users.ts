@@ -23,9 +23,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     async function getUsers() {
-        const users = await roqClient.asUser(session.roqUserId).userProfiles();
+        const { users } = await roqClient.asUser(session.roqUserId).users({ withTenant: true })
 
-        res.status(200).json({result: {users}});
+        res.status(200).json({ users });
     }
 
 }

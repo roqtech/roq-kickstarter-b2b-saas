@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import TestFlightList from './testflight.list';
 import TestFlightForm from './testflight';
+import useSWR from "swr";
+import { fetcher } from 'library/fetcher';
 
 const TestFlightIndex = (): JSX.Element => {
-    const [touch, setTouch] = useState<number>(0);
-
-    const handleTouch = () => {
-        setTouch((touch) => touch + 1);
-    };
-
+    const { data, mutate } = useSWR(
+        '/api/testflights',
+        fetcher
+      );
+    const refetch = () => mutate()
     return (
         <div>
-            <TestFlightForm handleTouch={handleTouch} />
-            <TestFlightList handleTouch={handleTouch} touch={touch} />
+            <TestFlightForm refetch={refetch} />
+            <TestFlightList refetch={refetch} data={data?.data ?? []} />
         </div>
     );
 };

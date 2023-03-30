@@ -1,30 +1,25 @@
-import { entitySchema } from 'components/validation/entity.schema';
+import { Project } from 'components/projects/project.list';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
-import { useEffect, useState } from 'react';
+import { fetcher } from 'library/fetcher';
+import useSWR, { Fetcher } from "swr";
 
 interface WorkspaceFormProps {
-    handleTouch: () => void;
+    refetch: () => void;
 }
 
-const WorkspaceForm = ({handleTouch}: WorkspaceFormProps): JSX.Element => {
-    const [projects, setProject] = useState([])
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch('/api/projects');
-            const response = await res.json();
-            setProject(response.data);
-        }
-
-        fetchData();
-    }, []);
+const WorkspaceForm = ({refetch}: WorkspaceFormProps): JSX.Element => {
+    const { data } = useSWR<{ data: Project[] }>(
+        '/api/projects',
+        fetcher
+      );
     const save = async (values: any, {resetForm}: any) => {
         try {
-            const response = await fetch('/api/workspaces', {
+            await fetch('/api/workspaces', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json',},
                 body: JSON.stringify(values),
             });
-            handleTouch();
+            refetch();
             resetForm();
         } catch (error) {
             console.error(error);
@@ -54,7 +49,7 @@ const WorkspaceForm = ({handleTouch}: WorkspaceFormProps): JSX.Element => {
                     </label>
                     <Field as="select" id='projectId' name="projectId" className='select select-bordered select-primary w-full max-w-xs'>
                         <option key={'empty'} value=''>Select Project</option>
-                        {projects.map(project => (
+                        {data?.data?.map(project => (
                             <option key={project.id} value={project.id}>{project.name}</option>
                         ))}
                     </Field>

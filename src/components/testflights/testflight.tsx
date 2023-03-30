@@ -1,30 +1,25 @@
-import { entitySchema } from 'components/validation/entity.schema';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
-import { useEffect, useState } from 'react';
+import { fetcher } from 'library/fetcher';
+import useSWR from "swr";
+import { Workspace } from 'components/workspace/workspace.list';
 
 interface TestFlightFormProps {
-    handleTouch: () => void;
+    refetch: () => void;
 }
 
-const TestFlightForm = ({handleTouch}: TestFlightFormProps): JSX.Element => {
-    const [workspaces, setWorkspaces] = useState([])
-    useEffect(() => {
-        async function fetchData() {
-            const res = await fetch('/api/workspaces');
-            const response = await res.json();
-            setWorkspaces(response.data);
-        }
-
-        fetchData();
-    }, []);
+const TestFlightForm = ({refetch}: TestFlightFormProps): JSX.Element => {
+    const { data } = useSWR<{ data: Workspace[] }>(
+        '/api/workspaces',
+        fetcher
+      );
     const save = async (values: any, {resetForm}: any) => {
         try {
-            const response = await fetch('/api/testflights', {
+            await fetch('/api/testflights', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json',},
                 body: JSON.stringify(values),
             });
-            handleTouch();
+            refetch();
             resetForm();
         } catch (error) {
             console.error(error);
@@ -54,7 +49,7 @@ const TestFlightForm = ({handleTouch}: TestFlightFormProps): JSX.Element => {
                     </label>
                     <Field as="select" name="workspaceId" id="workspaceId" className='select select-bordered select-primary w-full max-w-xs'>
                         <option key={'empty'} value=''>Select Workspace</option>
-                        {workspaces.map(option => (
+                        {data?.data.map(option => (
                             <option key={option.id} value={option.id}>{option.name}</option>
                         ))}
                     </Field>

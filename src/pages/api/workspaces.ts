@@ -58,7 +58,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         const id = req.query.id as string;
         try {
             await retrieveWithAuthorization({
-                prismaCollection: prisma.testFlight,
+                prismaCollection: prisma.workspace,
                 entity,
                 id,
                 roqUserId,
