@@ -11,8 +11,7 @@ const DashboardIndex = (): JSX.Element => {
 
     return (
         <div>
-            <DashboardForm handleTouch={handleTouch} />
-            <DashboardList handleTouch={handleTouch} touch={touch} />
+            Dashboard
         </div>
     );
 };

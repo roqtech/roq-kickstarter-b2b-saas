@@ -11,14 +11,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = getServerSession(req);
 
     switch (req.method) {
-        case 'GET':
-            return getCars();
-        case 'POST':
-            return createCar();
-        // case 'UPDATE':
+        // case 'GET':
+        //     return getCars();
+        // case 'POST':
         //     return createCar();
-        case'DELETE':
-            return deleteCar();
+        // // case 'UPDATE':
+        // //     return createCar();
+        // case'DELETE':
+        //     return deleteCar();
         default:
             return res.status(405).json({message: 'Method ' + req.method + ' not allowed'})
     }

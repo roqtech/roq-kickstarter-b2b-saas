@@ -1,4 +1,4 @@
-import {signIn, signUp} from "@roq/nextjs";
+import {requireNextAuth, signIn, signUp} from "@roq/nextjs";
 
 function HomePage() {
     return (
@@ -64,9 +64,9 @@ function HomePage() {
     )
 }
 
-export default HomePage;
+// export default HomePage;
 
-// export default requireNextAuth({
-//   redirectIfAuthenticated: false,
-//   redirectTo: "/login",
-// })(DashboardPage);
+export default requireNextAuth({
+  redirectIfAuthenticated: false,
+  redirectTo: "/login",
+})(HomePage);

@@ -1,5 +1,5 @@
-import {signOut, UserAccountDropdown, useSession} from "@roq/nextjs";
-import {HomeIcon, UsersIcon,} from '@heroicons/react/24/outline'
+import { UserAccountDropdown, useSession} from "@roq/nextjs";
+import { FolderIcon, BuildingOfficeIcon, BeakerIcon, UserCircleIcon, UserPlusIcon, CloudIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline'
 import Link from "next/link";
 import {NotificationBell} from '@roq/ui-react';
 
@@ -9,10 +9,12 @@ interface AppLayoutProps {
 }
 
 const navigation = [
-    {name: 'Dashboard', href: '/dashboard', icon: HomeIcon, page: "dashboard"},
-    {name: 'Users', href: '/users', icon: UsersIcon, page: "users"},
-    {name: 'User Invite', href: '/userinvite', icon: UsersIcon, page: "userinvite"},
-    {name: 'File uploads', href: '/files', icon: UsersIcon, page: "files"},
+    {name: 'Projects', href: '/projects', icon: FolderIcon, page: "projects"},
+    {name: 'Workspaces', href: '/workspaces', icon: BuildingOfficeIcon, page: "workspaces"},
+    {name: 'Test Flights', href: '/test-flights', icon: BeakerIcon, page: "test-flights"},
+    {name: 'Users', href: '/users', icon: UserCircleIcon, page: "users"},
+    {name: 'User Invite', href: '/userinvite', icon: UserPlusIcon, page: "userinvite"},
+    {name: 'File uploads', href: '/files', icon: CloudIcon, page: "files"},
 ]
 
 export default function DashboardLayout({children, current}: AppLayoutProps) {
@@ -44,10 +46,10 @@ export default function DashboardLayout({children, current}: AppLayoutProps) {
                     <UserAccountDropdown/>
                     <div className="text-xs ml-2">
                         <div className="block">
-                            {session.user.firstName} {session.user.lastName}
+                            {session.user.email}
                         </div>
                         <div className="">
-                            {session.user.roles}
+                            {`(${session.user.roles.join(', ')})`}
                         </div>
                     </div>
 
@@ -61,27 +63,18 @@ export default function DashboardLayout({children, current}: AppLayoutProps) {
                     {navigation.map((item) => (
                         <li key={item.page}>
                             <Link href={item.href} className={(item.page == current) ? "active" : ""}>
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
+                                {<item.icon className="w-6 h-6"/>}
+                                {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none"
                                      viewBox="0 0 24 24"
                                      stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                           d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                                </svg>
+                                </svg> */}
                                 {item.name}
                             </Link>
                         </li>
 
                     ))}
-                    <li>
-                        <a onClick={signOut}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                            </svg>
-                            Log out
-                        </a>
-                    </li>
 
                 </ul>
                 <div className="min-h-screen p-6 bg-gray-100 w-screen">

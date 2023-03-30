@@ -23,16 +23,16 @@ function DashboardList({handleTouch, touch}: DashboardListProps): JSX.Element {
     const [userProfiles, setUserProfiles] = useState<UserProfile[]>([]);
 
     useEffect(() => {
-        async function fetchCars() {
-            const res = await fetch('/api/cars');
-            const json = await res.json();
-            setCars(json.result.cars);
-            if (json.result.users.userProfiles) {
-                setUserProfiles(json.result.users.userProfiles.data);
-            }
-        }
+        // async function fetchCars() {
+        //     const res = await fetch('/api/cars');
+        //     const json = await res.json();
+        //     setCars(json.result.cars);
+        //     if (json.result.users.userProfiles) {
+        //         setUserProfiles(json.result.users.userProfiles.data);
+        //     }
+        // }
 
-        fetchCars();
+        // fetchCars();
     }, [touch]);
 
     const handleDeleteCar = async (id: number) => {

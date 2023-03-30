@@ -17,5 +17,8 @@ export default RoqAuth({
         UserService.welcomeUser(user.id);
       }
     },
+    onRegisterSuccess: async({ user, session }) => {
+      await UserService.registerUser(user.id, session.user.tenantId)
+    }
   },
 });
