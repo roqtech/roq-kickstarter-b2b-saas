@@ -16,6 +16,7 @@ export default RoqAuth({
       if (Date.now() - new Date(user.createdAt).getTime() < 60000) {
         UserService.welcomeUser(user.id);
       }
+      await UserService.registerUserIfNotExist(user.id, session.user.tenantId)
     },
     onRegisterSuccess: async({ user, session }) => {
       await UserService.registerUser(user.id, session.user.tenantId)

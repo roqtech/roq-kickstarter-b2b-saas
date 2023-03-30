@@ -12,6 +12,17 @@ export class UserService {
     });
   }
 
+  static async registerUserIfNotExist(roqUserId: string, tenantId: string) {
+    const exists = await prisma.user.findFirst({
+      where: {
+        roqUserId
+      }
+    })
+    if(!exists) {
+      return UserService.registerUser(roqUserId, tenantId)
+    }
+  }
+
   static async registerUser(roqUserId: string, tenantId: string) {
     await prisma.user.create({
       data: {
