@@ -1,49 +1,92 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  projects  Project[]
-  tenantId  String
-  roqUserId String
+generator client {
+  provider = "prisma-client-js"
 }
 
-model Project {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  user      User  @relation(fields: [userId], references: [id])
-  userId    String   @db.ObjectId
-  workspaces Workspace[]
+model Employee {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  job_title     String
+  department_id String  @db.ObjectId
+  manager_id    String? @db.ObjectId
+
+  department     Department              @relation("Department_Employees", fields: [department_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  manager        Employee?               @relation("Employee_Manager", fields: [manager_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subordinates   Employee[]              @relation("Employee_Manager")
+  leave_requests LeaveRequest[]
+  evaluations    PerformanceEvaluation[] @relation("Evaluator")
+  evaluationsBy  PerformanceEvaluation[] @relation("Evaluatee")
+  payroll        Payroll[]
+
+  manager_department_id String      @db.ObjectId
+  manager_department    Department?
+
+  @@map("employee")
 }
 
-model Workspace {
+model LeaveRequest {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String
-  project     Project  @relation(fields: [projectId], references: [id])
-  projectId   String   @db.ObjectId
-  testFlights TestFlight[]
+  employee_id String   @db.ObjectId
+  start_date  DateTime
+  end_date    DateTime
+  leave_type  String
+  status      String
+
+  employee Employee @relation(fields: [employee_id], references: [id])
+
+  @@map("leave_request")
 }
 
-model TestFlight {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  workspace   Workspace  @relation(fields: [workspaceId], references: [id])
-  workspaceId  String   @db.ObjectId
+model Department {
+  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
+  name                  String
+  department_manager_id String? @unique @db.ObjectId
+
+  department_manager Employee?  @relation(fields: [department_manager_id], references: [id])
+  employees          Employee[] @relation("Department_Employees")
+
+  @@map("department")
+}
+
+model PerformanceEvaluation {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  evaluator_id String   @db.ObjectId
+  evaluatee_id String   @db.ObjectId
+  rating       Int
+  feedback     String
+  date         DateTime
+
+  evaluator Employee @relation("Evaluator", fields: [evaluator_id], references: [id])
+  evaluatee Employee @relation("Evaluatee", fields: [evaluatee_id], references: [id])
+
+  @@map("performance_evaluation")
+}
+
+model Payroll {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  employee_id   String @db.ObjectId
+  salary        Float
+  pay_frequency String
+
+  employee Employee  @relation(fields: [employee_id], references: [id])
+  payslips Payslip[]
+
+  @@map("payroll")
+}
+
+model Payslip {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  payroll_id   String   @db.ObjectId
+  date         DateTime
+  gross_salary Float
+  net_salary   Float
+  deductions   Float
+  bonuses      Float
+
+  payroll Payroll @relation(fields: [payroll_id], references: [id])
+
+  @@map("payslip")
 }

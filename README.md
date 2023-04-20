@@ -46,3 +46,19 @@ Your app should be running at [http://localhost:3000](http://localhost:3000) by 
 ## Further documentation
 
 To learn more about ROQ UI components and APIs, take a look at [ROQ Documentation](https://docs.roq.tech)
+
+#### Generate Prisma Client
+
+Prisma is an open-source database toolkit that provides a type-safe database client. The Prisma client is used to perform CRUD operations on the database.
+
+To generate the Prisma client, run the following command in your terminal:
+
+`npx prisma generate`
+
+This command generates a Prisma client in the node_modules/.prisma/client directory. Make sure that you have the Prisma CLI installed globally before running this command.
+
+### Run database schema migrations
+
+Run the migrations with your local DB (check the env `DATABASE_URL` value):
+
+`npx prisma migrate deploy`
