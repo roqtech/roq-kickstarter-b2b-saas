@@ -1,5 +1,5 @@
 import { RoqAuth } from "@roq/nextjs";
-import { UserService } from "server/services/user.service";
+import { EmployeeService } from "server/services/employee.service";
 
 /*
     You can export RoqAuth without passing any options if you don't need to customize the behaviour
@@ -14,12 +14,12 @@ export default RoqAuth({
     onLoginSuccess: async ({ session, user }) => {
       //   If the user was just created, welcome them
       if (Date.now() - new Date(user.createdAt).getTime() < 60000) {
-        UserService.welcomeUser(user.id);
+        // UserService.welcomeUser(user.id);
       }
-      await UserService.registerUserIfNotExist(user.id, session.user.tenantId)
+      await EmployeeService.registerUserIfNotExist(user.id, session.user.tenantId, session.user.email)
     },
     onRegisterSuccess: async({ user, session }) => {
-      await UserService.registerUser(user.id, session.user.tenantId)
+      await EmployeeService.registerUser(user.id, session.user.tenantId, session.user.email)
     }
   },
 });

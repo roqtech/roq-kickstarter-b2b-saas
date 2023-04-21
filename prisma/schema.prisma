@@ -8,10 +8,13 @@ generator client {
 }
 
 model Employee {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  email         String
   job_title     String
-  department_id String  @db.ObjectId
-  manager_id    String? @db.ObjectId
+  department_id String   @db.ObjectId
+  manager_id    String?  @db.ObjectId
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   department     Department              @relation("Department_Employees", fields: [department_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   manager        Employee?               @relation("Employee_Manager", fields: [manager_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -21,8 +24,11 @@ model Employee {
   evaluationsBy  PerformanceEvaluation[] @relation("Evaluatee")
   payroll        Payroll[]
 
-  manager_department_id String      @db.ObjectId
+  manager_department_id String?     @db.ObjectId
   manager_department    Department?
+
+  roqUserId String @unique
+  tenantId  String
 
   @@map("employee")
 }
@@ -34,6 +40,8 @@ model LeaveRequest {
   end_date    DateTime
   leave_type  String
   status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   employee Employee @relation(fields: [employee_id], references: [id])
 
@@ -41,9 +49,11 @@ model LeaveRequest {
 }
 
 model Department {
-  id                    String  @id @default(auto()) @map("_id") @db.ObjectId
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
   name                  String
-  department_manager_id String? @unique @db.ObjectId
+  department_manager_id String?  @unique @db.ObjectId
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
   department_manager Employee?  @relation(fields: [department_manager_id], references: [id])
   employees          Employee[] @relation("Department_Employees")
@@ -58,6 +68,8 @@ model PerformanceEvaluation {
   rating       Int
   feedback     String
   date         DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   evaluator Employee @relation("Evaluator", fields: [evaluator_id], references: [id])
   evaluatee Employee @relation("Evaluatee", fields: [evaluatee_id], references: [id])
@@ -66,10 +78,12 @@ model PerformanceEvaluation {
 }
 
 model Payroll {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
-  employee_id   String @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  employee_id   String   @db.ObjectId
   salary        Float
-  pay_frequency String
+  pay_frequency Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   employee Employee  @relation(fields: [employee_id], references: [id])
   payslips Payslip[]
@@ -85,6 +99,8 @@ model Payslip {
   net_salary   Float
   deductions   Float
   bonuses      Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   payroll Payroll @relation(fields: [payroll_id], references: [id])
 

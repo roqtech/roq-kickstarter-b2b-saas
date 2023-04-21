@@ -15,6 +15,7 @@ export async function hasAccess(
       entity,
       operation
     })
+  console.log('queryPlans:', queryPlans)
   const conditionals = queryPlans.filter((e) => e.kind === QueryPlanKind.restricted)
   const canAccessAll = queryPlans.find((e) => e.kind === QueryPlanKind.fullAccess)
 

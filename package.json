@@ -13,7 +13,7 @@
     "@heroicons/react": "^2.0.16",
     "@next/font": "13.1.1",
     "@prisma/client": "^4.11.0",
-    "@roq/nextjs": "1.0.0",
+    "@roq/nextjs": "^1.0.4",
     "bcrypt": "^5.1.0",
     "daisyui": "^2.51.3",
     "eslint": "8.31.0",

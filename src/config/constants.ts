@@ -1,0 +1,1 @@
+export const DEFAULT_DEPARTMENT_ID = '6442300099f6a7de89c0f0c1'

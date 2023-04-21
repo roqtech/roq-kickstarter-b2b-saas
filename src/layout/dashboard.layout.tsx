@@ -9,12 +9,14 @@ interface AppLayoutProps {
 }
 
 const navigation = [
-    {name: 'Projects', href: '/projects', icon: FolderIcon, page: "projects"},
-    {name: 'Workspaces', href: '/workspaces', icon: BuildingOfficeIcon, page: "workspaces"},
-    {name: 'Test Flights', href: '/test-flights', icon: BeakerIcon, page: "test-flights"},
-    {name: 'Users', href: '/users', icon: UserCircleIcon, page: "users"},
+    {name: 'Payroll', href: '/payrolls', icon: FolderIcon, page: "payrolls"},
+    {name: 'Payslip', href: '/payslips', icon: FolderIcon, page: "payslips"},
+    // {name: 'Projects', href: '/projects', icon: FolderIcon, page: "projects"},
+    // {name: 'Workspaces', href: '/workspaces', icon: BuildingOfficeIcon, page: "workspaces"},
+    // {name: 'Test Flights', href: '/test-flights', icon: BeakerIcon, page: "test-flights"},
+    // {name: 'Users', href: '/users', icon: UserCircleIcon, page: "users"},
     {name: 'User Invite', href: '/userinvite', icon: UserPlusIcon, page: "userinvite"},
-    {name: 'File uploads', href: '/files', icon: CloudIcon, page: "files"},
+    // {name: 'File uploads', href: '/files', icon: CloudIcon, page: "files"},
 ]
 
 export default function DashboardLayout({children, current}: AppLayoutProps) {
