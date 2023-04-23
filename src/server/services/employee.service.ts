@@ -29,7 +29,7 @@ export class EmployeeService {
               id: departmentId || DEFAULT_DEPARTMENT_ID
             },
             create: {
-              name: 'Initial'
+              name: 'Initial',
             }
           }
         }

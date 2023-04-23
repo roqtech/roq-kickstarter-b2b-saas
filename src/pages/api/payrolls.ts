@@ -48,7 +48,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             }
             const data = await prisma.payroll.create({
                 data: {
-                    ...req.body,
+                  ...req.body,
                 }
             });
             return res.status(200).json({ data });

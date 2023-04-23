@@ -3,7 +3,11 @@ import { Prisma, Department } from "@prisma/client";
 
 export class DepartmentService {
 
-  static async create(arg: Prisma.DepartmentCreateArgs): Promise<Department> {
+  static async create(arg: Prisma.DepartmentCreateArgs) {
     return prisma.department.create(arg);
+  }
+
+  static async lists(arg?: Prisma.DepartmentFindManyArgs) {
+    return prisma.department.findMany(arg);
   }
 }
