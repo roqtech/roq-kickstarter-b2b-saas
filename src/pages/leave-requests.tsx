@@ -1,11 +1,11 @@
 import { requireNextAuth } from '@roq/nextjs';
 import DashboardLayout from '../layout/dashboard.layout';
-import PayslipsIndex from '../components/payslip/payslip.index';
+import LeaveRequestsIndex from '../components/leave-requests/leave-request.index';
 
-const PayslipsPage = (): JSX.Element => {
+const LeaveRequestsPage = (): JSX.Element => {
   return (
-    <DashboardLayout current="payslips">
-      <PayslipsIndex />
+    <DashboardLayout current="leave-requests">
+      <LeaveRequestsIndex />
     </DashboardLayout>
   );
 };
@@ -13,4 +13,4 @@ const PayslipsPage = (): JSX.Element => {
 export default requireNextAuth({
   redirectIfAuthenticated: false,
   redirectTo: '/login',
-})(PayslipsPage);
+})(LeaveRequestsPage);

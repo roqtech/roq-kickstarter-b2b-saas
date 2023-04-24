@@ -9,7 +9,10 @@ interface AppLayoutProps {
 }
 
 const navigation = [
+    {name: 'Employee', href: '/employees', icon: FolderIcon, page: "employees"},
     {name: 'Department', href: '/departments', icon: FolderIcon, page: "departments"},
+    {name: 'Leave Requests', href: '/leave-requests', icon: FolderIcon, page: "leave-requests"},
+    {name: 'Performance Evaluation', href: '/performance-evaluations', icon: FolderIcon, page: "performance-evaluations"},
     {name: 'Payroll', href: '/payrolls', icon: FolderIcon, page: "payrolls"},
     {name: 'Payslip', href: '/payslips', icon: FolderIcon, page: "payslips"},
     // {name: 'Projects', href: '/projects', icon: FolderIcon, page: "projects"},

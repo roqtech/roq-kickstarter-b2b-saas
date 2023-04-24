@@ -61,6 +61,7 @@ export async function buildAuthorizationFilter(
         })
     queryPlans = response.buildQueryPlan
   }
+  console.log('queryPlans:', JSON.stringify(queryPlans))
   const conditionals = queryPlans.filter((e) => e.kind === QueryPlanKind.restricted)
   const canAccessAll = queryPlans.find((e) => e.kind === QueryPlanKind.fullAccess)
   if(canAccessAll) {

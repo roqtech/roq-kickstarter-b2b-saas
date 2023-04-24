@@ -1,5 +1,6 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
 import {getServerSession, withAuth} from "@roq/nextjs";
+import dayjs from 'dayjs'
 import { prisma } from 'server/db';
 import { EmployeeService } from 'server/services/employee.service';
 import { hasAccess } from 'library/authorization/hasAccess';
@@ -8,7 +9,7 @@ import { retrieveWithAuthorization } from 'library/authorization/retrieve-with-a
 import { buildAuthorizationFilter } from 'library/authorization/build-filter';
 import { AuthorizationForbiddenException } from 'library/authorization/authorization-forbidden.exception';
 
-const entity = 'Employee'
+const entity = 'PerformanceEvaluation'
 async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const session = getServerSession(req);
@@ -16,9 +17,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     switch (req.method) {
         case 'GET':
-            return getEmployees();
-        // case 'POST':
-        //     return createPayrolls();
+            return getPerformanceEvaluations();
+        case 'POST':
+            return createPerformanceEvaluation();
         // case'DELETE':
         //     return deleteProject();
         default:
@@ -26,37 +27,45 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
 
-    async function getEmployees() {
+    async function getPerformanceEvaluations() {
         const filter = await buildAuthorizationFilter(roqUserId, entity)
-        // console.log('getEmployees -> filter:', filter)
-        // TODO: couldn't map
-        const where = filter?.employees?.some
-        const data = await prisma.employee.findMany({
-            where,
+        console.log('getPerformanceEvaluations -> filter:', filter)
+
+        // const curUser = await prisma.employee.findFirst({ where: { roqUserId }})
+        // const department_id = curUser.department_id
+        const data = await prisma.performanceEvaluation.findMany({
+            where: {
+              ...filter, 
+              // employee: {
+              //   department_id
+              // }
+            },
             orderBy: [{createdAt: 'desc',},],
             include: {
-              department: true,
-              payroll: true,
+              evaluatee: true,
+              evaluator: true
             }
         });
 
         return res.status(200).json({ data });
     }
 
-    async function createPayrolls(){
+    async function createPerformanceEvaluation(){
         try {
             const { allowed } = await hasAccess(roqUserId, entity, ResourceOperationEnum.Create)
-            console.log('createPayrolls -> allowed:', allowed)
-            // if(!allowed) {
-            //     return res.status(403).json({message: 'Forbidden' })
-            // }
-            const data = {}
-            // const data = await prisma.project.create({
-            //     data: {
-            //         ...req.body,
-            //         userId: await UserService.getUserId(session.roqUserId)
-            //     }
-            // });
+            if(!allowed) {
+                return res.status(403).json({message: 'Forbidden' })
+            }
+            const curUser = await prisma.employee.findFirst({ where: { roqUserId }})
+            const data = await prisma.performanceEvaluation.create({
+              data: {
+                date: dayjs().toDate(),
+                feedback: req.body.feedback ?? 'Good',
+                rating: req.body.rating,
+                evaluator_id: curUser.id,
+                evaluatee_id: req.body.evaluatee_id
+              }
+            });
             return res.status(200).json({ data });
         } catch (error) {
             console.log(error);
