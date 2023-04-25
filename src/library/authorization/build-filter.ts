@@ -1,9 +1,9 @@
 import { QueryPlanInterface } from "./interfaces";
-const snakeCase = require('lodash.snakecase')
 import pluralize from 'pluralize'
 import { QueryPlanModel, ResourceOperationEnum } from "@roq/nodejs/dist/src/generated/sdk";
 import { QueryPlanKind } from "./enums";
 import { roqClient } from "server/roq";
+import { getRelation } from './utils'
 
 function buildFilter(queryPlan: QueryPlanInterface, userIdField: string): Record<string, any> {
   if(queryPlan.tenantId) {
@@ -20,11 +20,12 @@ function buildFilter(queryPlan: QueryPlanInterface, userIdField: string): Record
     }
     return response
   }
+  const relation = getRelation(queryPlan)
   if(queryPlan.case === 'many-to-many') {
     const response = {
-      [pluralize(snakeCase(queryPlan.to))]: {
+      [pluralize(relation)]: {
         some: {
-          [snakeCase(queryPlan.to)]: buildFilter(queryPlan.in, userIdField)
+          [relation]: buildFilter(queryPlan.in, userIdField)
         }
       }
     }
@@ -32,13 +33,14 @@ function buildFilter(queryPlan: QueryPlanInterface, userIdField: string): Record
   }
   if(queryPlan.case === 'many-to-one') {
     const response = {
-      [snakeCase(queryPlan.to)]: buildFilter(queryPlan.in, userIdField)
+      [relation]: buildFilter(queryPlan.in, userIdField)
     }
     return response
   }
 
+  // one-to-many
   const response =  {
-    [pluralize(snakeCase(queryPlan.to))]: {
+    [pluralize(relation)]: {
       some: buildFilter(queryPlan.in, userIdField)
     }
   }
