@@ -29,11 +29,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     async function getEmployees() {
         const filter = await authorizationClient.buildAuthorizationFilter(roqUserId, entity)
-        // console.log('getEmployees -> filter:', filter)
-        // TODO: couldn't map
-        const where = filter?.employees?.some
         const data = await prisma.employee.findMany({
-            where,
+            where: filter,
             orderBy: [{createdAt: 'desc',},],
             include: {
               department: true,

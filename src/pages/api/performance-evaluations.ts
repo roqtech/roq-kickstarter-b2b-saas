@@ -33,12 +33,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         // const curUser = await prisma.employee.findFirst({ where: { roqUserId }})
         // const department_id = curUser.department_id
         const data = await prisma.performanceEvaluation.findMany({
-            where: {
-              ...filter, 
+            where: filter,
+            // where: {
+            //   ...filter, 
               // employee: {
               //   department_id
               // }
-            },
+            // },
             orderBy: [{createdAt: 'desc',},],
             include: {
               evaluatee: true,

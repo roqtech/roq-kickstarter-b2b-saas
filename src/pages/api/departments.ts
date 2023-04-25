@@ -7,8 +7,6 @@ import { authorizationClient } from 'server/roq';
 import { ResourceOperationEnum } from '@roq/nodejs/dist/src/generated/sdk'
 import { buildAuthorizationFilter, hasAccess } from 'library/authorization'
 
-const prisma = new PrismaClient()
-
 const entity = 'Department'
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = getServerSession(req)
@@ -31,8 +29,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   async function lists() {
     const filter = await authorizationClient.buildAuthorizationFilter(roqUserId, entity)
-    console.log('lists -> filter:', filter)
-    // TODO: admin filter
     // {
     //   employees: { some: { tenantId: '9658ae0c-a18d-4962-a38b-a8c22786e495' } }
     // }
