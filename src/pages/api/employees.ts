@@ -1,6 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
 import {getServerSession, withAuth} from "@roq/nextjs";
 import { prisma } from 'server/db';
+import { authorizationClient } from 'server/roq';
 import { EmployeeService } from 'server/services/employee.service';
 import { hasAccess } from 'library/authorization/hasAccess';
 import { ResourceOperationEnum } from "@roq/nodejs/dist/src/generated/sdk";
@@ -27,7 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 
     async function getEmployees() {
-        const filter = await buildAuthorizationFilter(roqUserId, entity)
+        const filter = await authorizationClient.buildAuthorizationFilter(roqUserId, entity)
         // console.log('getEmployees -> filter:', filter)
         // TODO: couldn't map
         const where = filter?.employees?.some
@@ -45,7 +46,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     async function createPayrolls(){
         try {
-            const { allowed } = await hasAccess(roqUserId, entity, ResourceOperationEnum.Create)
+            const { allowed } = await authorizationClient.hasAccess(roqUserId, entity, ResourceOperationEnum.Create)
             console.log('createPayrolls -> allowed:', allowed)
             // if(!allowed) {
             //     return res.status(403).json({message: 'Forbidden' })

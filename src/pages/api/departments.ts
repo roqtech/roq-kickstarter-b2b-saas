@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client'
 import { DepartmentService } from 'server/services/department.service'
 import { getServerSession, withAuth } from '@roq/nextjs'
 import { roqClient } from '../../server/roq'
+import { authorizationClient } from 'server/roq';
 import { ResourceOperationEnum } from '@roq/nodejs/dist/src/generated/sdk'
 import { buildAuthorizationFilter, hasAccess } from 'library/authorization'
 
@@ -29,7 +30,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   async function lists() {
-    const filter = await buildAuthorizationFilter(roqUserId, entity)
+    const filter = await authorizationClient.buildAuthorizationFilter(roqUserId, entity)
     console.log('lists -> filter:', filter)
     // TODO: admin filter
     // {
@@ -51,7 +52,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         ...req.body,
       },
     })
-    const { allowed } = await hasAccess(
+    const { allowed } = await authorizationClient.hasAccess(
       roqUserId,
       entity,
       ResourceOperationEnum.Create,

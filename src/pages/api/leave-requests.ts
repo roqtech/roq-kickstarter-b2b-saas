@@ -3,11 +3,10 @@ import {getServerSession, withAuth} from "@roq/nextjs";
 import dayjs from 'dayjs'
 import { prisma } from 'server/db';
 import { EmployeeService } from 'server/services/employee.service';
-import { hasAccess } from 'library/authorization/hasAccess';
 import { ResourceOperationEnum } from "@roq/nodejs/dist/src/generated/sdk";
 import { retrieveWithAuthorization } from 'library/authorization/retrieve-with-authorization';
-import { buildAuthorizationFilter } from 'library/authorization/build-filter';
 import { AuthorizationForbiddenException } from 'library/authorization/authorization-forbidden.exception';
+import { authorizationClient } from 'server/roq';
 
 const entity = 'LeaveRequest'
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,7 +27,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 
     async function getLeaveRequests() {
-        const filter = await buildAuthorizationFilter(roqUserId, entity)
+        const filter = await authorizationClient.buildAuthorizationFilter(roqUserId, entity)
         const data = await prisma.leaveRequest.findMany({
             where: filter,
             orderBy: [{createdAt: 'desc',},],
@@ -42,7 +41,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     async function createLeaveRequest(){
         try {
-            const { allowed } = await hasAccess(roqUserId, entity, ResourceOperationEnum.Create)
+            const { allowed } = await authorizationClient.hasAccess(roqUserId, entity, ResourceOperationEnum.Create)
             if(!allowed) {
                 return res.status(403).json({message: 'Forbidden' })
             }
