@@ -5,18 +5,17 @@ import { fetcher } from 'library/fetcher';
 import EmployeeList from './employee.list';
 
 const EmployeeIndex = (): JSX.Element => {
-    const { data, mutate } = useSWR(
-        '/api/employees',
-        fetcher
-      );
-    console.log('EmployeeIndex -> data:', data)
+  const { data, mutate } = useSWR(
+    '/api/employees',
+    fetcher
+  );
 
-    return (
-        <div>
-          {/* <EmployeeForm refetch={() => mutate()} /> */}
-          <EmployeeList refetch={() => mutate()} data={data?.data ?? []} />
-        </div>
-    );
+  return (
+    <div>
+      {/* <EmployeeForm refetch={() => mutate()} /> */}
+      <EmployeeList refetch={() => mutate()} data={data?.data ?? []} />
+    </div>
+  );
 };
 
 export default EmployeeIndex;

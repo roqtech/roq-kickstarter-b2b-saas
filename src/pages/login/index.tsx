@@ -38,5 +38,5 @@ const LoginPage = function () {
 
 export default requireNextAuth({
   redirectIfAuthenticated: true,
-  redirectTo: "/",
+  redirectTo: "/dashboard",
 })(LoginPage);

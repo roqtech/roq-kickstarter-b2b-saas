@@ -9,7 +9,6 @@ const PerformanceEvaluationIndex = (): JSX.Element => {
     '/api/performance-evaluations',
     fetcher
   );
-  console.log('PerformanceEvaluationIndex -> data:', data)
 
   return (
     <div>

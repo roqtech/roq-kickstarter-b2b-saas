@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import type { Department, Employee } from "@prisma/client";
+import { useToastResponse } from "hooks/use-toast-response";
 
 
 type DepartmentData = Department & {
@@ -14,11 +15,17 @@ interface DepartmentListProps {
 }
 
 function DepartmentList({ data, refetch }: DepartmentListProps): JSX.Element {
-  const handleDeleteitem = async (id: number | string) => {
+
+  const toastRes = useToastResponse()
+  const handleDelete = async (id: number | string) => {
     try {
-      const response = await fetch('/api/projects?id=' + id, {
+      const response = await fetch('/api/departments', {
         method: 'DELETE',
-      });
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }),
+      }).then(toastRes).catch(toastRes)
       refetch()
     } catch (error) {
       console.error(error);
@@ -48,7 +55,7 @@ function DepartmentList({ data, refetch }: DepartmentListProps): JSX.Element {
               </td>
               <td>
 
-                <button className="btn btn-outline btn-sm gap-2" onClick={() => handleDeleteitem(item.id)}>
+                <button className="btn btn-outline btn-sm gap-2" onClick={() => handleDelete(item.id)}>
                   <TrashIcon
                     className="h-6 w-6"
                     aria-hidden="true"

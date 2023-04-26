@@ -19,6 +19,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             return getPerformanceEvaluations();
         case 'POST':
             return createPerformanceEvaluation();
+        case 'PATCH':
+            return updatePerformanceEvaluation();
         // case'DELETE':
         //     return deleteProject();
         default:
@@ -66,7 +68,30 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 evaluatee_id: req.body.evaluatee_id
               }
             });
-            return res.status(200).json({ data });
+            return res.status(200).json({ data, message: 'Created evaluation successfully' });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({message: 'Internal server error'});
+        }
+    }
+
+    async function updatePerformanceEvaluation(){
+        try {
+            const { allowed } = await authorizationClient.hasAccess(roqUserId, entity, ResourceOperationEnum.Update)
+            if(!allowed) {
+                return res.status(403).json({message: 'Forbidden' })
+            }
+            console.log('updatePerformanceEvaluation -> req.body.id:', req.body.id)
+            const data = await prisma.performanceEvaluation.update({
+              where: {
+                id: req.body.id
+              },
+              data: {
+                date: dayjs().toDate(),
+                rating: Math.ceil(Math.random()*10),
+              }
+            });
+            return res.status(200).json({ data, message: 'Update successfully' });
         } catch (error) {
             console.log(error);
             return res.status(500).json({message: 'Internal server error'});

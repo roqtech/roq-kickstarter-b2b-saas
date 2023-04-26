@@ -19,6 +19,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             return getLeaveRequests();
         case 'POST':
             return createLeaveRequest();
+        case 'PATCH': 
+          return updateLeaveRequest();
         // case'DELETE':
         //     return deleteProject();
         default:
@@ -55,13 +57,38 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 employee_id: curUser.id,
               }
             });
-            return res.status(200).json({ data });
+            return res.status(200).json({ data, message: 'Create leave request successfully' });
         } catch (error) {
             console.log(error);
             return res.status(500).json({message: 'Internal server error'});
         }
     }
 
+    async function updateLeaveRequest(){
+        try {
+            const { allowed } = await authorizationClient.hasAccess(roqUserId, entity, ResourceOperationEnum.Update)
+            if(!allowed) {
+                return res.status(403).json({message: 'Forbidden' })
+            }
+            if (req.body.status) {
+              // TODO: check role here, > department_manager is allow to update status
+            }
+            const data = await prisma.leaveRequest.update({
+              where: {
+                id: req.body.id
+              },
+              data: {
+                status: req.body.status,
+                end_date: dayjs().add(Math.ceil(Math.random()*10), 'day').toDate(),
+              }
+            });
+            return res.status(200).json({ data, message: 'Update leave request successfully' });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({message: 'Internal server error'});
+        }
+    }
+    
     async function deleteProject() {
 
         const id = req.query.id as string;

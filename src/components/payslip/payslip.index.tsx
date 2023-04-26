@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import useSWR, { Fetcher } from "swr";
 import { fetcher } from 'library/fetcher';
+import PayslipList from './payslip.list';
+import PayslipForm from './payslip.form';
 
 const PaySlipIndex = (): JSX.Element => {
     const { data, mutate } = useSWR(
@@ -11,7 +13,8 @@ const PaySlipIndex = (): JSX.Element => {
 
     return (
         <div>
-
+          <PayslipForm refetch={() => mutate()} />
+          <PayslipList refetch={() => mutate()} data={data?.data ?? []} />
         </div>
     );
 };

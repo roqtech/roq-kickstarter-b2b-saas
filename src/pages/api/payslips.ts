@@ -6,43 +6,48 @@ import { ResourceOperationEnum } from '@roq/nodejs/dist/src/generated/sdk'
 import { retrieveWithAuthorization } from 'library/authorization/retrieve-with-authorization'
 import { AuthorizationForbiddenException } from 'library/authorization/authorization-forbidden.exception'
 import { authorizationClient } from 'server/roq'
+import dayjs from 'dayjs'
 
-const entity = 'Payroll'
+const entity = 'Payslip'
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = getServerSession(req)
   const { roqUserId } = session
 
   switch (req.method) {
     case 'GET':
-      return getPayrolls()
+      return getPayslips()
     case 'POST':
-      return createPayrolls()
+      return createPayslips()
     case 'DELETE':
-      return deletePayroll()
+      return deletePayslips()
     default:
       return res
         .status(405)
         .json({ message: 'Method ' + req.method + ' not allowed' })
   }
 
-  async function getPayrolls() {
+  async function getPayslips() {
     const filter = await authorizationClient.buildAuthorizationFilter(
       roqUserId,
       entity,
     )
-    // console.log('getPayrolls -> filter:', JSON.stringify(filter, null, 2))
-    const data = await prisma.payroll.findMany({
+    // console.log('getPayslips -> filter:', JSON.stringify(filter, null, 2))
+    const data = await prisma.payslip.findMany({
       where: filter,
       orderBy: [{ createdAt: 'desc' }],
       include: {
-        employee: true,
+        payroll: {
+          include: {
+            employee: true
+          }
+        },
       },
     })
 
     return res.status(200).json({ data })
   }
 
-  async function createPayrolls() {
+  async function createPayslips() {
     try {
       const { allowed } = await authorizationClient.hasAccess(
         roqUserId,
@@ -52,21 +57,26 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       if (!allowed) {
         return res.status(403).json({ message: 'Forbidden' })
       }
-      const data = await prisma.payroll.create({
+      const data = await prisma.payslip.create({
         data: {
-          ...req.body,
+          payroll_id: req.body.payroll_id,
+          bonuses: Math.ceil(Math.random()*10),
+          date: dayjs().toDate(),
+          deductions: Math.ceil(Math.random()*10),
+          gross_salary: req.body.gross_salary,
+          net_salary: req.body.net_salary,
         },
       })
       return res
         .status(200)
-        .json({ data, message: 'Created payroll successfully' })
+        .json({ data, message: 'Created payslip successfully' })
     } catch (error) {
       console.log(error)
       return res.status(500).json({ message: 'Internal server error' })
     }
   }
 
-  async function deletePayroll() {
+  async function deletePayslips() {
     const id = req.query.id as string
     try {
       const { allowed } = await authorizationClient.hasAccess(
@@ -77,7 +87,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       if (!allowed) {
         return res.status(403).json({ message: 'Forbidden' })
       }
-      const data = await prisma.payroll.delete({
+      const data = await prisma.payslip.delete({
         where: { id },
       })
 

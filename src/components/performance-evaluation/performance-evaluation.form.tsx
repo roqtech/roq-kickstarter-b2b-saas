@@ -18,14 +18,13 @@ interface PerformanceEvaluationFormProps {
 
 const PerformanceEvaluationForm = ({ refetch }: PerformanceEvaluationFormProps): JSX.Element => {
   const { data, mutate, isLoading } = useSWR(
-    '/api/employees',
+    '/api/employees?type=employee',
     fetcher
   );
   const [selected, setSelected] = useState<any>()
   const people = useMemo<any[]>(() => isLoading ? [] : data.data, [isLoading, data])
 
   const save = async (values: any, { resetForm, ...rest }: any) => {
-    console.log('save -> values:', values)
     try {
       const response = await fetch('/api/performance-evaluations', {
         method: 'POST',

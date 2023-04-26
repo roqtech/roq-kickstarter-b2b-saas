@@ -9,7 +9,6 @@ const LeaveRequestIndex = (): JSX.Element => {
     '/api/leave-requests',
     fetcher
   );
-  console.log('LeaveRequestIndex -> data:', data)
 
   const createLeave = async () => {
     try {
