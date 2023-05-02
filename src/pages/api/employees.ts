@@ -37,6 +37,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         variables: {},
         query: `{\n  users(filter: {roleKey: {valueIn: [\"${type}\"]}}) {\n    data {\n      id\n      email\n    }\n  }\n}\n`,
       }
+      const serverAuth = Buffer.from(`${process.env.ROQ_CLIENT_ID}:${process.env.ROQ_CLIENT_SECRET}`).toString('base64')
       const users = await fetch(
         `${process.env.ROQ_PLATFORM_URL}/v01/server/graphql`,
         {
@@ -44,8 +45,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           headers: {
             'Content-Type': 'application/json',
             'roq-platform-authorization': 'Bearer ' + token,
-            'roq-platform-server-authorization':
-              'Basic YTE4N2Y3NmEtMTllNS00NGJmLTkzNWQtYzdlMjZhMmIwMGViOjA0OTQzZWVhLTcyZDAtNGY1OS04MzBlLWM4NzlhNmFiZmY5Mw==',
+            'roq-platform-server-authorization': `Basic ${serverAuth}`
           },
           body: JSON.stringify(payload),
         },
