@@ -2,10 +2,12 @@ import { Fragment, useEffect, useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import type { Department, Employee } from "@prisma/client";
 import { useToastResponse } from "hooks/use-toast-response";
+import { useSelectEmployee } from "hooks/use-select-employee";
 
 
 type DepartmentData = Department & {
   employees: Employee[]
+  department_manager: Employee
 }
 
 interface DepartmentListProps {
@@ -16,6 +18,7 @@ interface DepartmentListProps {
 
 function DepartmentList({ data, refetch }: DepartmentListProps): JSX.Element {
 
+  const { renderSelect, selected: employeeSelected } = useSelectEmployee({ type: 'department-manager' })
   const toastRes = useToastResponse()
   const handleDelete = async (id: number | string) => {
     try {
@@ -40,6 +43,7 @@ function DepartmentList({ data, refetch }: DepartmentListProps): JSX.Element {
           <tr>
             <th>Name</th>
             <th>Employees</th>
+            <th>Manager</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -51,6 +55,14 @@ function DepartmentList({ data, refetch }: DepartmentListProps): JSX.Element {
                 <div className="flex items-center">
                   <div className="mr-4">{item.employees?.length ?? 0}</div>
                   <div>{item.employees?.map(emp => <p key={emp.id}>{emp.email}</p>)}</div>
+                </div>
+              </td>
+              <td>
+                <div className="flex flex-col">
+                  <p>{item.department_manager?.email ?? 'No department manager'}</p>
+                  <div>
+                    {renderSelect}
+                  </div>
                 </div>
               </td>
               <td>

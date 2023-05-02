@@ -38,8 +38,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       include: {
         payroll: {
           include: {
-            employee: true
-          }
+            employee: true,
+          },
         },
       },
     })
@@ -60,9 +60,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       const data = await prisma.payslip.create({
         data: {
           payroll_id: req.body.payroll_id,
-          bonuses: Math.ceil(Math.random()*10),
+          bonuses: Math.ceil(Math.random() * 10),
           date: dayjs().toDate(),
-          deductions: Math.ceil(Math.random()*10),
+          deductions: Math.ceil(Math.random() * 10),
           gross_salary: req.body.gross_salary,
           net_salary: req.body.net_salary,
         },

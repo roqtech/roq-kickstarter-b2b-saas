@@ -36,6 +36,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         where: filter,
         include: {
           employees: true,
+          department_manager: true,
         },
       })
       res.status(200).json({ departments })
