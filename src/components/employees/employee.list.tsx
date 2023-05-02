@@ -24,7 +24,7 @@ function EmployeeList({ data, refetch }: EmployeeListProps): JSX.Element {
     fetcher
   );
   const toastRes = useToastResponse()
-  const departments = useMemo<Department[]>(() => depData?.departments ?? [], [])
+  const departments = useMemo<Department[]>(() => depData?.departments ?? [], [depData])
 
   const handleChangeDep = async (values: any) => {
     try {
