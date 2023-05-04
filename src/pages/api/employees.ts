@@ -65,6 +65,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       entity,
       additionalFilter,
     )
+
+    // prisma.employee
+    //   .withAuthorization({
+    //     userId: '1',
+    //   })
+    //   .findMany({})
+
     const data = await prisma.employee.findMany({
       where: filter,
       orderBy: [{ createdAt: 'desc' }],
